@@ -1,0 +1,29 @@
+#-*- mode: git-ignore -*-
+
+# Python
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+*.manifest
+*.spec
+*.pyc
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Databases
+*.db
+*.sqlite3
+
+# Caches
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+
+# Streamlit
+.streamlit/secrets.toml
