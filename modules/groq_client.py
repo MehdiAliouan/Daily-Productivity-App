@@ -2,16 +2,19 @@ import os
 import streamlit as st
 from groq import Groq, GroqError
 from config.prompts import GROQ_PROMPTS
+from config.settings import GROQ_MODEL
+from typing import Optional, Any, Dict
 
 class GroqClient:
-    def __init__(self):
+    def __init__(self) -> None:
         # Prioritize Secrets, then Env
-        self.api_key = None
+        self.api_key: Optional[str] = None
         if "GROQ_API_KEY" in st.secrets:
             self.api_key = st.secrets["GROQ_API_KEY"]
         elif os.getenv("GROQ_API_KEY"):
             self.api_key = os.getenv("GROQ_API_KEY")
              
+        self.client: Optional[Groq] = None
         if self.api_key:
             try:
                 self.client = Groq(api_key=self.api_key)
@@ -21,32 +24,32 @@ class GroqClient:
         else:
             self.client = None
 
-    def get_completion(self, prompt_key, **kwargs):
+    def get_completion(self, prompt_key: str, **kwargs: Any) -> str:
         if not self.client:
             return "Please configure your GROQ_API_KEY to use AI features."
         
-        prompt_template = GROQ_PROMPTS.get(prompt_key)
+        prompt_template: Optional[str] = GROQ_PROMPTS.get(prompt_key)
         if not prompt_template:
             return "Error: Prompt key not found."
             
-        formatted_prompt = prompt_template.format(**kwargs)
+        formatted_prompt: str = prompt_template.format(**kwargs)
         
         # Simple Session State Caching
-        cache_key = f"groq_cache_{hash(formatted_prompt)}"
+        cache_key: str = f"groq_cache_{hash(formatted_prompt)}"
         if cache_key in st.session_state:
             return st.session_state[cache_key]
         
         try:
-            chat_completion = self.client.chat.completions.create(
+            chat_completion: Any = self.client.chat.completions.create(
                 messages=[
                     {
                         "role": "user",
                         "content": formatted_prompt,
                     }
                 ],
-                model="llama-3.3-70b-versatile",
+                model=GROQ_MODEL, # Use the centralized model name
             )
-            response_content = chat_completion.choices[0].message.content
+            response_content: str = chat_completion.choices[0].message.content
             
             # Cache the response
             st.session_state[cache_key] = response_content

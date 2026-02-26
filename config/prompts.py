@@ -4,12 +4,12 @@ GROQ_PROMPTS = {
     "daily_planning": """
     You are an expert productivity coach. Your goal is to help the user plan their day effectively.
     
-    Given the following list of tasks and user context:
+    Given the following list of tasks (including their priority, duration, and category) and user context:
     {user_context}
 
     Please provide a structured daily plan that includes:
-    1.  **Top 3 Priorities**: The most important tasks to complete today.
-    2.  **Time Blocking Schedule**: A suggested schedule for the day (assuming an 8-hour workday), allocating time for deep work and shallow work.
+    1.  **Top 3 Priorities**: The most important tasks to complete today, considering their priority and category.
+    2.  **Time Blocking Schedule**: A suggested schedule for the day (assuming an {target_daily_hours}-hour workday), allocating time for deep work and shallow work, and grouping similar categories if beneficial.
     3.  **Task Dependency Analysis**: Identify if any tasks block others.
     4.  **Motivation**: A short, punchy motivational quote or advice relevant to the user's load.
 
@@ -40,3 +40,4 @@ GROQ_PROMPTS = {
     3.  **A specific focus technique** to try today (e.g., Pomodoro, Flowtime).
     """
 }
+
